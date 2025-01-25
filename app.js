@@ -1,8 +1,15 @@
-const createError = require('http-errors');
+#!/usr/bin/env node
+require('dotenv').config({ path: './config.env' });
 const express = require('express');
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+const cors = require('cors');
+const createError = require('http-errors');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const debug = require('debug')('expressjs:server'); // currying function
+const http = require('http');
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
@@ -45,5 +52,106 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+/**
+ * Get port from environment and store in Express.
+ */
+
+const port = process.env.PORT || 3000;
+app.set('port', port);
+
+/**
+ * Create HTTP server.
+ */
+
+const server = http.createServer(app);
+
+// MongoDB connection
+const DB_URI = process.env.DB_URI;
+const PASSWORD = process.env.PASSWORD;
+
+if (!DB_URI || !PASSWORD) {
+  console.error("MongoDB connection string or password is not defined.");
+  process.exit(1);
+}
+
+const DB = DB_URI.replace("<PASSWORD>", PASSWORD);
+
+// Connecting to DataBase
+mongoose
+    .connect(DB, { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(() => console.log("MongoDB connected successfully."))
+    .catch((err) => {
+      console.error("MongoDB connection error:", err);
+      process.exit(1); // Exit the application if DB connection fails
+    });
+
+/**
+ * Listen on provided port, on all network interfaces.
+ */
+
+server.listen(port, 'localhost');
+server.on('error', onError);
+server.on('listening', onListening);
+
+/**
+ * Normalize a port into a number, string, or false.
+ */
+
+function normalizePort(val) {
+  const port = parseInt(val, 10);
+
+  if (isNaN(port)) {
+    // named pipe
+    return val;
+  }
+
+  if (port >= 0) {
+    // port number
+    return port;
+  }
+
+  return false;
+}
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+
+function onError(error) {
+  if (error.syscall !== 'listen') {
+    throw error;
+  }
+
+  var bind = typeof port === 'string'
+      ? 'Pipe ' + port
+      : 'Port ' + port;
+
+  // handle specific listen errors with friendly messages
+  switch (error.code) {
+    case 'EACCES':
+      console.error(bind + ' requires elevated privileges');
+      process.exit(1);
+      break;
+    case 'EADDRINUSE':
+      console.error(bind + ' is already in use');
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
+}
+
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+
+function onListening() {
+  const addr = server.address();
+  const bind = typeof addr === 'string'
+      ? 'pipe ' + addr
+      : 'port ' + addr.port;
+  debug('Listening on ' + bind);
+}
 
 module.exports = app;
