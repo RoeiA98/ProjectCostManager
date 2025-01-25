@@ -10,4 +10,4 @@ services:
     plan: free
     autoDeploy: true
     publish:
-      - path: .
+      - path: ./
