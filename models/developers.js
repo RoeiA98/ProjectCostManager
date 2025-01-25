@@ -17,7 +17,7 @@ const developerSchema = new mongoose.Schema({
         required: [true, "Developer property must include last name!"],
         validate: {
             validator: isValidEnglishName,
-            message: (props) => `${props.value} is not a valid first name!`,
+            message: (props) => `${props.value} is not a valid last name!`,
         },
     }
 });
