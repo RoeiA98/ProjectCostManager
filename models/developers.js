@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { isValidEnglishName } = require("../functions");
+const { isValidEnglishName } = require("../help_funcs");
 
 
 const developerSchema = new mongoose.Schema({
