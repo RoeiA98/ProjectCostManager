@@ -8,18 +8,21 @@ const Users = require("../models/user");
 /* POST add a new cost item. */
 router.post('/add', async (req, res) => {
     try {
-        const { description, category, userid, sum, date } = req.body;
+        const { description, category, userId, sum, year, month, time, day } = req.body;
 
-        if (!description || !category || !userid || !sum) {
-            return res.status(400).json({ error: 'Description, category, userid, and sum are required' });
+        if (!description || !category || !userId || !sum) {
+            return res.status(400).json({error: 'Description, category, userid, and sum are required.'});
         }
 
         const costItem = new CostItem({
             description,
             category,
-            userid,
+            userId,
             sum,
-            date: date || Date.now()
+            year: year || new Date().getFullYear(),
+            month: month || new Date().getMonth() + 1,
+            day: day || new Date().getDay(),
+            time: time || `${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`
         });
 
         const savedCostItem = await costItem.save();

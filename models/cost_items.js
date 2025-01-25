@@ -5,8 +5,11 @@ const costSchema = new mongoose.Schema({
     category: { type: String, required: true },
     userId: { type: String, required: true },
     sum: { type: Number, required: true },
-    year: { type: Number, required: true },
-    month: { type: Number, required: true }
+    year: { type: Number, required: false },
+    month: { type: Number, required: false },
+    day: {type: Number, required: false},
+    time: {type: String, required: false}
+
 });
 
 const CostItems = mongoose.model('CostItems', costSchema);
