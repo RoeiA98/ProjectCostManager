@@ -83,7 +83,10 @@ mongoose
  * Listen on provided port, on all network interfaces.
  */
 
-server.listen(port, 'localhost');
+// Create the HTTP server and listen on the provided port
+server.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
 server.on('error', onError);
 server.on('listening', onListening);
 
