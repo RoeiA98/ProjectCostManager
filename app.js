@@ -55,7 +55,6 @@ app.set('port', port);
 const server = http.createServer(app);
 
 // MongoDB connection
-// const DB_URI = 'mongodb+srv://roei922:kOR6DZqj7TzaV4S3@nodejs-project.exe6s.mongodb.net/?retryWrites=true&w=majority&appName=NodeJS-Project';
 DB_URI = process.env.DB_URI;
 // Connecting to DataBase
 mongoose
