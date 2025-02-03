@@ -36,9 +36,17 @@ app.use(function(err, req, res, next) {
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+  // If you're using an API, return JSON instead of rendering a view
+  if (req.xhr || req.accepts('json')) {
+    res.status(err.status || 500).json({
+      message: err.message,
+      error: err
+    });
+  } else {
+    // fallback to rendering the error page
+    res.status(err.status || 500);
+    res.render('error');
+  }
 });
 
 /**
@@ -64,7 +72,7 @@ if (!DB_URI) {
 
 // Connecting to DataBase
 mongoose
-    .connect(DB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+    .connect(DB_URI)
     .then(() => console.log("MongoDB connected successfully."))
     .catch((err) => {
       console.error("MongoDB connection error:", err);
