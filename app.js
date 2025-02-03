@@ -55,19 +55,11 @@ app.set('port', port);
 const server = http.createServer(app);
 
 // MongoDB connection
-const DB_URI = process.env.DB_URI;
-const PASSWORD = process.env.PASSWORD;
-
-if (!DB_URI || !PASSWORD) {
-  console.error("MongoDB connection string or password is not defined.");
-  process.exit(1);
-}
-
-const DB = DB_URI.replace("<PASSWORD>", PASSWORD);
-
+// const DB_URI = 'mongodb+srv://roei922:kOR6DZqj7TzaV4S3@nodejs-project.exe6s.mongodb.net/?retryWrites=true&w=majority&appName=NodeJS-Project';
+DB_URI = process.env.DB_URI;
 // Connecting to DataBase
 mongoose
-    .connect(DB, { useNewUrlParser: true, useUnifiedTopology: true })
+    .connect(DB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => console.log("MongoDB connected successfully."))
     .catch((err) => {
       console.error("MongoDB connection error:", err);

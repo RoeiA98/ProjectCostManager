@@ -8,16 +8,16 @@ const Users = require("../models/user");
 /* POST add a new cost item. */
 router.post('/add', async (req, res) => {
     try {
-        const { description, category, userId, sum, year, month, time, day } = req.body;
+        const { description, category, userid, sum, year, month, time, day } = req.body;
 
-        if (!description || !category || !userId || !sum) {
+        if (!description || !category || !userid || !sum) {
             return res.status(400).json({error: 'Description, category, userid, and sum are required.'});
         }
 
         const costItem = new CostItem({
             description,
             category,
-            userId,
+            userid,
             sum,
             year: year || new Date().getFullYear(),
             month: month || new Date().getMonth() + 1,
@@ -36,9 +36,9 @@ router.post('/add', async (req, res) => {
 /* GET user details by ID. */
 router.get('/users/:id', async (req, res) => {
     try {
-        const userId = String(req.params.id);  // Ensure id is a string
-        const user = await Users.findOne({ id: userId }).select("-_id");
-        const user_costs = await CostItem.find({userId: userId}).select("-_id");
+        const userid = String(req.params.id);  // Ensure id is a string
+        const user = await Users.findOne({ id: userid }).select("-_id");
+        const user_costs = await CostItem.find({userid: userid}).select("-_id");
 
         if (!user || !user_costs) {
             return res.status(404).json({error: 'User not found'});
@@ -90,7 +90,7 @@ router.get('/report', async (req, res) => {
         }
 
         const costs = await CostItem.find({
-            userId: id,
+            userid: parseInt(id),
             year: parseInt(year),
             month: parseInt(month)
         }).select("-_id");
@@ -101,20 +101,37 @@ router.get('/report', async (req, res) => {
             });
         }
 
-        const groupedCosts = costs.reduce((acc, cost) => {
-            if (!acc[cost.category]) {
-                acc[cost.category] = [];
-            }
-            acc[cost.category].push({
-                description: cost.description,
-                sum: cost.sum,
-                year: cost.year,
-                month: cost.month,
-            });
-            return acc;
-        }, {});
+        // Initialize the result structure
+        const result = {
+            userid: parseInt(id),
+            year: parseInt(year),
+            month: parseInt(month),
+            costs: []
+        };
 
-        res.status(200).json(groupedCosts);
+        // Categories to include in the response
+        const categories = ['food', 'health', 'housing', 'sport', 'education'];
+
+        // Initialize each category as an empty array
+        categories.forEach(category => {
+            result.costs.push({
+                [category]: []
+            });
+        });
+
+        // Group costs by category
+        costs.forEach(cost => {
+            const categoryIndex = categories.indexOf(cost.category);
+            if (categoryIndex !== -1) {
+                result.costs[categoryIndex][cost.category].push({
+                    sum: cost.sum,
+                    description: cost.description,
+                    day: cost.day // Assuming `day` field is available
+                });
+            }
+        });
+
+        res.status(200).json(result);
 
     } catch (error) {
         return res.status(500).send({
