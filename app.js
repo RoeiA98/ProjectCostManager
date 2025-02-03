@@ -56,6 +56,12 @@ const server = http.createServer(app);
 
 // MongoDB connection
 DB_URI = process.env.DB_URI;
+
+if (!DB_URI) {
+  console.error("MongoDB URI is not defined. Please check your environment variables.");
+  process.exit(1); // Exit if DB URI is not set
+}
+
 // Connecting to DataBase
 mongoose
     .connect(DB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
