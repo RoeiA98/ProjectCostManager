@@ -62,7 +62,10 @@ router.post('/add', async (req, res) => {
  */
 router.get('/users/:id', async (req, res) => {
     try {
-        const userid = String(req.params.id);  // Ensure id is a string
+        const userid = req.params.id;
+        if (userid < 1) { return res.status(400).json({error: 'User ID must be a positive number.'}); }
+        if (isNaN(userid)) { return res.status(400).json({error: 'User ID must be a number.'}); }
+
         const user = await Users.findOne({ id: userid }).select('-_id');
         const user_costs = await CostItem.find({userid: userid}).select('-_id');
 
@@ -113,10 +116,38 @@ router.get('/about', async (req, res) =>{
 router.get('/report', async (req, res) => {
     try {
         const { id, year, month } = req.query;
-
-        if (!id || !year || !month) {
+        // Validate that id, year, and month exist and are not null
+        if (!id) {return res.status(400).json({error: 'id is required.'});}
+        if (isNaN(id)) { return res.status(400).json({error: 'User ID must be a number.'}); }
+        if (id < 1) {
             return res.status(400).json({
-                error: 'id, year, and month are required.',
+                error: 'User ID must be a positive number.',
+            });
+        }
+        if (!year) {return res.status(400).json({error: 'year is required.'});}
+        if (!month) {return res.status(400).json({error: 'month is required.'});}
+        if (!id && !year && !month) {return res.status(400).json({error: 'id, year, and month are required.'});}
+
+        // Validate that year and month are numbers
+        if (isNaN(year)) {return res.status(400).json({error: 'year must be a valid number.',});}
+        if (isNaN(month)) {return res.status(400).json({error: 'month must be a valid number.',});}
+        if (isNaN(year) && isNaN(month)) {
+            return res.status(400).json({
+                error: 'year and month must be valid numbers.',
+            });
+        }
+
+        // Validate that year and month are within valid ranges
+        const yearInt = parseInt(year);
+        const monthInt = parseInt(month);
+        if (yearInt < 1900 || yearInt > new Date().getFullYear()) {
+            return res.status(400).json({
+                error: 'year must be between 1900 and the current year.',
+            });
+        }
+        if (monthInt < 1 || monthInt > 12) {
+            return res.status(400).json({
+                error: 'month must be between 1 and 12.',
             });
         }
 
@@ -136,7 +167,7 @@ router.get('/report', async (req, res) => {
 
         if (!costs.length) {
             return res.status(404).json({
-                error: 'No cost items found for the specified user, year, and month.',
+                error: `No cost items found for user ${id} for month: ${month}, year: ${year}.`,
             });
         }
 
@@ -165,7 +196,7 @@ router.get('/report', async (req, res) => {
                 result.costs[categoryIndex][cost.category].push({
                     sum: cost.sum,
                     description: cost.description,
-                    day: cost.day // Assuming `day` field is available
+                    day: cost.day
                 });
             }
         });

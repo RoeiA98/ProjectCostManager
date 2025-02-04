@@ -14,7 +14,6 @@ const categories = ['food', 'health', 'housing', 'sport', 'education'];
  * @property {number} [day] - Day of the cost item.
  * @property {string} [time] - Time of the cost item.
  */
-
 const costSchema = new mongoose.Schema({
     description: {
         type: String,
