@@ -22,22 +22,9 @@ router.post('/add', async (req, res) => {
     try {
         const { description, category, userid, sum, year, month, time, day } = req.body;
 
-        if (!description || !category || !userid || !sum) {
-            return res.status(400).json({error: 'Description, category, userid, and sum are required.'});
-        }
-
-        const categories = ['food', 'health', 'housing', 'sport', 'education'];
-
-        if (!categories.includes(category)) {
-            return res.status(400).json({error: 'Invalid category.'});
-        }
-
-        if (sum < 0) {
-            return res.status(400).json({error: 'Sum must be a positive number.'});
-        }
-
-        if (Users.findOne({id: userid}) === null) {
-            return res.status(404).json({error: 'User not found.'});
+        const user = await Users.findOne({ id: userid });
+        if (!user) {
+            return res.status(404).json({ error: 'User not found.' });
         }
 
         const costItem = new CostItem({
@@ -52,10 +39,18 @@ router.post('/add', async (req, res) => {
         });
 
         const savedCostItem = await costItem.save();
-
         res.status(201).json(savedCostItem);
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        if (error.name === 'ValidationError') {
+            return res.status(400).json({
+                message: "Validation error",
+                error: error.message,
+            });
+        }
+        res.status(500).json({
+            message: "Internal server error",
+            error: "An unexpected error occurred",
+        });
     }
 });
 
@@ -72,7 +67,7 @@ router.get('/users/:id', async (req, res) => {
         const user_costs = await CostItem.find({userid: userid}).select('-_id');
 
         if (!user || !user_costs) {
-            return res.status(404).json({error: 'User not found'});
+            return res.status(404).json({error: 'User not found.'});
         }
 
         const total = user_costs.reduce((acc, cost) => acc + cost.sum, 0);
@@ -84,7 +79,9 @@ router.get('/users/:id', async (req, res) => {
             total: total
         });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(500).json({
+            message: "Internal server error",
+            error: "An unexpected error occurred", });
     }
 });
 
