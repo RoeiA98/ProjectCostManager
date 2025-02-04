@@ -10,19 +10,19 @@ const { isValidEnglishName } = require("../utils");
 const developerSchema = new mongoose.Schema({
     first_name: {
         type: String,
-        required: [true, 'Developer property must include first name!'],
+        required: [true, 'Developer must have a first name.'],
         validate: {
             validator: isValidEnglishName,
-            message: (props) => `${props.value} is not a valid first name!`,
+            message: (props) => `${props.value} is not a valid first name.`,
         },
     },
 
     last_name: {
         type: String,
-        required: [true, 'Developer property must include last name!'],
+        required: [true, 'Developer must have a last name.'],
         validate: {
             validator: isValidEnglishName,
-            message: (props) => `${props.value} is not a valid last name!`,
+            message: (props) => `${props.value} is not a valid last name.`,
         },
     }
 });
