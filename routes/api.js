@@ -14,6 +14,20 @@ router.post('/add', async (req, res) => {
             return res.status(400).json({error: 'Description, category, userid, and sum are required.'});
         }
 
+        const categories = ['food', 'health', 'housing', 'sport', 'education'];
+
+        if (!categories.includes(category)) {
+            return res.status(400).json({error: 'Invalid category.'});
+        }
+
+        if (sum < 0) {
+            return res.status(400).json({error: 'Sum must be a positive number.'});
+        }
+
+        if (Users.findOne({id: userid}) === null) {
+            return res.status(404).json({error: 'User not found.'});
+        }
+
         const costItem = new CostItem({
             description,
             category,
