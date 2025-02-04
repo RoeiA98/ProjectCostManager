@@ -22,9 +22,9 @@ const costSchema = new mongoose.Schema({
         maxlength: [100, 'Description must be less than 500 characters.'],
         validate: {
             validator: function (value) {
-                return /^[a-zA-Z]+$/.test(value);
+                return /^[a-zA-Z]+(?:\s[a-zA-Z]+)*$/.test(value);
             },
-            message: 'Description must contain ONLY letters in English.',
+            message: 'Description must contain ONLY letters in English, with spaces if needed.',
         }
     },
     category: {
