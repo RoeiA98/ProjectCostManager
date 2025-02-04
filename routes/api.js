@@ -54,6 +54,18 @@ router.post('/add', async (req, res) => {
     }
 });
 
+
+router.get('/users', async (req, res) => {
+    try {
+        res.status(400).json({error: 'User ID is required.'});
+    } catch (error) {
+        res.status(500).json({
+            message: "Internal server error",
+            error: "An unexpected error occurred",
+        });
+    }
+});
+
 /**
  * Get user details by ID.
  * @route GET /api/users/:id
