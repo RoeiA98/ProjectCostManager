@@ -91,5 +91,3 @@ const costSchema = new mongoose.Schema({
 const CostItems = mongoose.model('CostItems', costSchema);
 
 module.exports = CostItems;
-
-// test
