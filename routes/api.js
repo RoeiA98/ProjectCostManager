@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
-const CostItem = require('../models/cost_items');
-const Developer = require('../models/developers');
-const Users = require('../models/user');
+const cost = require('../models/cost_items');
+const developer = require('../models/developers');
+const users = require('../models/user');
 
 /**
  * Add a new cost item.
@@ -22,12 +22,12 @@ router.post('/add', async (req, res) => {
     try {
         const { description, category, userid, sum, year, month, time, day } = req.body;
 
-        const user = await Users.findOne({ id: userid });
+        const user = await users.findOne({ id: userid });
         if (!user) {
             return res.status(404).json({ error: 'User not found.' });
         }
 
-        const costItem = new CostItem({
+        const costItem = new cost({
             description,
             category,
             userid,
@@ -66,8 +66,8 @@ router.get('/users/:id', async (req, res) => {
         if (userid < 1) { return res.status(400).json({error: 'User ID must be a positive number.'}); }
         if (isNaN(userid)) { return res.status(400).json({error: 'User ID must be a number.'}); }
 
-        const user = await Users.findOne({ id: userid }).select('-_id');
-        const user_costs = await CostItem.find({userid: userid}).select('-_id');
+        const user = await users.findOne({ id: userid }).select('-_id');
+        const user_costs = await cost.find({userid: userid}).select('-_id');
 
         if (!user || !user_costs) {
             return res.status(404).json({error: 'User not found.'});
@@ -95,7 +95,7 @@ router.get('/users/:id', async (req, res) => {
  */
 router.get('/about', async (req, res) =>{
     try {
-        const developers = await Developer.find().select('-_id -__v');
+        const developers = await developer.find().select('-_id -__v');
         res.status(200).json(developers);
     } catch (error) {
         res.status(500).send({
@@ -151,7 +151,7 @@ router.get('/report', async (req, res) => {
             });
         }
 
-        const user = await Users.findOne({ id: id });
+        const user = await users.findOne({ id: id });
 
         if (!user) {
             return res.status(404).json({
@@ -159,7 +159,7 @@ router.get('/report', async (req, res) => {
             });
         }
 
-        const costs = await CostItem.find({
+        const costs = await cost.find({
             userid: parseInt(id),
             year: parseInt(year),
             month: parseInt(month)

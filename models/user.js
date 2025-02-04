@@ -3,7 +3,7 @@ const {getIntegerValidator, isValidEnglishName} = require("../utils");
 
 /**
  * User schema definition.
- * @typedef {Object} User
+ * @typedef {Object} users
  * @property {number} id - Unique user ID.
  * @property {string} first_name - First name of the user.
  * @property {string} last_name - Last name of the user.
@@ -45,6 +45,6 @@ const userSchema = new mongoose.Schema({
     }
 });
 
-const User = mongoose.model('User', userSchema);
+const users = mongoose.model('User', userSchema);
 
-module.exports = User;
+module.exports = users;

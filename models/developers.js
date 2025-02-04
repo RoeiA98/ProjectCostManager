@@ -3,7 +3,7 @@ const { isValidEnglishName } = require("../utils");
 
 /**
  * Developer schema definition.
- * @typedef {Object} Developer
+ * @typedef {Object} developers
  * @property {string} first_name - First name of the developer.
  * @property {string} last_name - Last name of the developer.
  */
@@ -27,5 +27,5 @@ const developerSchema = new mongoose.Schema({
     }
 });
 
-const Developer = mongoose.model('Developer', developerSchema);
-module.exports = Developer;
+const developers = mongoose.model('Developer', developerSchema);
+module.exports = developers;

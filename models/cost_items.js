@@ -4,7 +4,7 @@ const categories = ['food', 'health', 'housing', 'sport', 'education'];
 
 /**
  * Cost schema definition.
- * @typedef {Object} Cost
+ * @typedef {Object} costs
  * @property {string} description - Description of the cost item.
  * @property {string} category - Category of the cost item.
  * @property {number} userid - User ID associated with the cost item.
@@ -21,7 +21,7 @@ const costSchema = new mongoose.Schema({
         maxlength: [100, 'Description must be less than 500 characters.'],
         validate: {
             validator: function (value) {
-                return /^[a-zA-Z]+(?:\s[a-zA-Z]+)*$/.test(value);
+                return /^[a-zA-Z0-9]+(?:\s[a-zA-Z0-9]+)*$/.test(value);
             },
             message: 'Description must contain ONLY letters in English, with spaces if needed.',
         }
@@ -87,6 +87,6 @@ const costSchema = new mongoose.Schema({
     },
 });
 
-const CostItems = mongoose.model('CostItems', costSchema);
+const CostItems = mongoose.model('Costs', costSchema);
 
 module.exports = CostItems;
