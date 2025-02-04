@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { isValidEnglishName } = require("../help_funcs");
+const { isValidEnglishName } = require("../utils");
 
 /**
  * Developer schema definition.
