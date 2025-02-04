@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { isValidEnglishName } = require("../utils");
+const { isValidEnglishName, getIntegerValidator} = require("../utils");
 
 /**
  * Developer schema definition.
@@ -8,24 +8,40 @@ const { isValidEnglishName } = require("../utils");
  * @property {string} last_name - Last name of the developer.
  */
 const developerSchema = new mongoose.Schema({
+    id: {
+        type: Number,
+        required: true,
+        unique: true,
+        validate: getIntegerValidator,
+    },
     first_name: {
         type: String,
-        required: [true, 'Developer must have a first name.'],
+        required: [true, 'First name is required.'],
+        maxlength: [50, 'First name must be less than 50 characters.'],
         validate: {
             validator: isValidEnglishName,
-            message: (props) => `${props.value} is not a valid first name.`,
-        },
+            message: 'First name must contain ONLY letters in English.',
+        }
     },
-
     last_name: {
         type: String,
-        required: [true, 'Developer must have a last name.'],
+        required: true,
+        maxlength: [50, 'Last name must be less than 50 characters.'],
         validate: {
             validator: isValidEnglishName,
-            message: (props) => `${props.value} is not a valid last name.`,
-        },
+            message: 'Last name must contain ONLY letters in English.',
+        }
+    },
+    birthday: {
+        type: Date,
+        required: [true, 'Birthday is required.'],
+    },
+    marital_status: {
+        type: String,
+        required: [true, 'Marital status is required.'],
     }
 });
 
 const developers = mongoose.model('Developer', developerSchema);
+
 module.exports = developers;

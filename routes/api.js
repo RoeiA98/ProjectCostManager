@@ -91,14 +91,15 @@ router.get('/users/:id', async (req, res) => {
 /**
  * Get the development team members.
  * @route GET /api/about
- * @returns {Object[]} List of developers.
+ * @returns {Object[]} 200 - An array of developer objects.
+ * @returns {string} 500 - Error message if developers are not found.
  */
-router.get('/about', async (req, res) =>{
+router.get('/about', async (req, res) => {
     try {
-        const developers = await developer.find().select('-_id -__v');
+        const developers = await developer.find().select('first_name last_name -_id');
         res.status(200).json(developers);
     } catch (error) {
-        res.status(500).send({
+        res.status(500).json({
             message: 'Developers not found.',
             error: error.message,
         });
