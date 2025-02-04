@@ -1,5 +1,14 @@
 const mongoose = require('mongoose');
 
+/**
+ * User schema definition.
+ * @typedef {Object} User
+ * @property {number} id - Unique user ID.
+ * @property {string} first_name - First name of the user.
+ * @property {string} last_name - Last name of the user.
+ * @property {Date} birthday - Birthday of the user.
+ * @property {string} marital_status - Marital status of the user.
+ */
 const userSchema = new mongoose.Schema({
     id: {
         type: Number,

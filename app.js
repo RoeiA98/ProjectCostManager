@@ -52,14 +52,12 @@ app.use(function(err, req, res, next) {
 /**
  * Get port from environment and store in Express.
  */
-
 const port = process.env.PORT || 3000;
 app.set('port', port);
 
 /**
  * Create HTTP server.
  */
-
 const server = http.createServer(app);
 
 // MongoDB connection
@@ -92,8 +90,8 @@ server.on('listening', onListening);
 
 /**
  * Event listener for HTTP server "error" event.
+ * @param {Error} error - Error object.
  */
-
 function onError(error) {
   if (error.syscall !== 'listen') {
     throw error;
@@ -121,7 +119,6 @@ function onError(error) {
 /**
  * Event listener for HTTP server "listening" event.
  */
-
 function onListening() {
   const addr = server.address();
   const bind = typeof addr === 'string'

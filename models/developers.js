@@ -1,20 +1,25 @@
 const mongoose = require('mongoose');
 const { isValidEnglishName } = require("../help_funcs");
 
-
+/**
+ * Developer schema definition.
+ * @typedef {Object} Developer
+ * @property {string} first_name - First name of the developer.
+ * @property {string} last_name - Last name of the developer.
+ */
 const developerSchema = new mongoose.Schema({
-    firstname: {
+    first_name: {
         type: String,
-        required: [true, "Developer property must include first name!"],
+        required: [true, 'Developer property must include first name!'],
         validate: {
             validator: isValidEnglishName,
             message: (props) => `${props.value} is not a valid first name!`,
         },
     },
 
-    lastname: {
+    last_name: {
         type: String,
-        required: [true, "Developer property must include last name!"],
+        required: [true, 'Developer property must include last name!'],
         validate: {
             validator: isValidEnglishName,
             message: (props) => `${props.value} is not a valid last name!`,
@@ -22,5 +27,5 @@ const developerSchema = new mongoose.Schema({
     }
 });
 
-const Developer = mongoose.model("Developer", developerSchema);
+const Developer = mongoose.model('Developer', developerSchema);
 module.exports = Developer;

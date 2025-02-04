@@ -1,11 +1,23 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
-const CostItem = require("../models/cost_items");
-const Developer = require("../models/developers");
-const Users = require("../models/user");
+const CostItem = require('../models/cost_items');
+const Developer = require('../models/developers');
+const Users = require('../models/user');
 
-/* POST add a new cost item. */
+/**
+ * Add a new cost item.
+ * @route POST /api/add
+ * @param {string} description - Description of the cost item.
+ * @param {string} category - Category of the cost item.
+ * @param {number} userid - User ID associated with the cost item.
+ * @param {number} sum - Sum of the cost item.
+ * @param {number} [year] - Year of the cost item.
+ * @param {number} [month] - Month of the cost item.
+ * @param {string} [time] - Time of the cost item.
+ * @param {number} [day] - Day of the cost item.
+ * @returns {Object} The saved cost item.
+ */
 router.post('/add', async (req, res) => {
     try {
         const { description, category, userid, sum, year, month, time, day } = req.body;
@@ -47,12 +59,17 @@ router.post('/add', async (req, res) => {
     }
 });
 
-/* GET user details by ID. */
+/**
+ * Get user details by ID.
+ * @route GET /api/users/:id
+ * @param {string} id - User ID.
+ * @returns {Object} User details and total cost.
+ */
 router.get('/users/:id', async (req, res) => {
     try {
         const userid = String(req.params.id);  // Ensure id is a string
-        const user = await Users.findOne({ id: userid }).select("-_id");
-        const user_costs = await CostItem.find({userid: userid}).select("-_id");
+        const user = await Users.findOne({ id: userid }).select('-_id');
+        const user_costs = await CostItem.find({userid: userid}).select('-_id');
 
         if (!user || !user_costs) {
             return res.status(404).json({error: 'User not found'});
@@ -71,20 +88,31 @@ router.get('/users/:id', async (req, res) => {
     }
 });
 
-/* GET the Development Team Members */
+/**
+ * Get the development team members.
+ * @route GET /api/about
+ * @returns {Object[]} List of developers.
+ */
 router.get('/about', async (req, res) =>{
     try {
-        const developers = await Developer.find().select("-_id -__v");
+        const developers = await Developer.find().select('-_id -__v');
         res.status(200).json(developers);
     } catch (error) {
         res.status(500).send({
-            message: "Developers not found.",
+            message: 'Developers not found.',
             error: error.message,
         });
     }
 });
 
-/* GET Monthly Report for a specific user */
+/**
+ * Get monthly report for a specific user.
+ * @route GET /api/report
+ * @param {string} id - User ID.
+ * @param {number} year - Year of the report.
+ * @param {number} month - Month of the report.
+ * @returns {Object} Monthly report for the user.
+ */
 router.get('/report', async (req, res) => {
     try {
         const { id, year, month } = req.query;
@@ -149,8 +177,8 @@ router.get('/report', async (req, res) => {
 
     } catch (error) {
         return res.status(500).send({
-            message: "Internal server error",
-            error: "An unexpected error occurred",
+            message: 'Internal server error',
+            error: 'An unexpected error occurred',
         });
     }
 });
