@@ -32,7 +32,7 @@ def test_add_cost_item(mock_post):
     ({"description": "Groceries", "category": "", "userid": 1, "sum": 1}, "Category is required.", 400),
     ({"description": "", "category": "food", "userid": 1, "sum": 1}, "Description is required.", 400),
     ({"description": "Groceries", "category": "invalid_category", "userid": 1, "sum": 1}, "Invalid category", 400),
-    ({"description": "Groceries", "category": "food", "userid": 1, "sum": -1}, "is less than minimum allowed value", 400),
+    ({"description": "Groceries", "category": "food", "userid": 1, "sum": -1}, "less than minimum allowed value", 400),
     ({"description": "Groceries", "category": "food", "userid": 1, "sum": 1, "year": 1800}, "Invalid year", 400),
     ({"description": "Groceries", "category": "food", "userid": 1, "sum": 1, "month": 13}, "Invalid month", 400),
     ({"description": "Groceries", "category": "food", "userid": 1, "sum": 1, "day": 32}, "Invalid day", 400),
