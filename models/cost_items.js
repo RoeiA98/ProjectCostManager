@@ -71,7 +71,7 @@ const costSchema = new mongoose.Schema({
                 const daysInMonth = new Date(year, month, 0).getDate();
                 return value >= 1 && value <= daysInMonth;
             },
-        message: 'Day must be between 1 and the number of days in the month.',
+        message: 'Invalid day - Day must be between 1 and the number of days in the month.',
         },
     },
     time: {
@@ -82,7 +82,7 @@ const costSchema = new mongoose.Schema({
                 const timeRegex = /^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/;
                 return timeRegex.test(value);
             },
-            message: 'Time must be in the format HH:MM:SS and represent a valid time.',
+            message: 'Invalid time - Time must be in the format HH:MM:SS and represent a valid time.',
         },
     },
 });
