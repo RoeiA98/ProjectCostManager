@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const {getIntegerValidator, isValidEnglishName} = require("../utils");
+const { getIntegerValidator, isValidEnglishName } = require("../utils");
 
 /**
  * User schema definition.
@@ -15,7 +15,7 @@ const userSchema = new mongoose.Schema({
         type: Number,
         required: true,
         unique: true,
-        validate: getIntegerValidator,
+        validate: getIntegerValidator
     },
     first_name: {
         type: String,
@@ -23,7 +23,7 @@ const userSchema = new mongoose.Schema({
         maxlength: [50, 'First name must be less than 50 characters.'],
         validate: {
             validator: isValidEnglishName,
-            message: 'First name must contain ONLY letters in English.',
+            message: 'First name must contain ONLY letters in English.'
         }
     },
     last_name: {
@@ -32,19 +32,23 @@ const userSchema = new mongoose.Schema({
         maxlength: [50, 'Last name must be less than 50 characters.'],
         validate: {
             validator: isValidEnglishName,
-            message: 'Last name must contain ONLY letters in English.',
+            message: 'Last name must contain ONLY letters in English.'
         }
     },
     birthday: {
         type: Date,
-        required: [true, 'Birthday is required.'],
+        required: [true, 'Birthday is required.']
     },
     marital_status: {
         type: String,
-        required: [true, 'Marital status is required.'],
+        required: [true, 'Marital status is required.']
     }
 });
 
+/**
+ * Users model for interacting with the users collection.
+ * @type {mongoose.Model}
+ */
 const users = mongoose.model('User', userSchema);
 
 module.exports = users;

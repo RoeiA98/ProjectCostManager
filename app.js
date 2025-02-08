@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-require('dotenv').config({ path: './config.env' });
+require('dotenv').config({path: './config.env'});
 const express = require('express');
 const mongoose = require('mongoose');
 const createError = require('http-errors');
@@ -13,25 +13,35 @@ const apiRouter = require('./routes/api');
 
 const app = express();
 
-// view engine setup
+/**
+ * Set up view engine.
+ */
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
 app.use(logger('dev'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/api', apiRouter);
 
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
+/**
+ * Catch 404 and forward to error handler.
+ */
+app.use(function (req, res, next) {
   next(createError(404));
 });
 
-// error handler
-app.use(function(err, req, res, next) {
+/**
+ * Error handler.
+ * @param {Error} err - Error object.
+ * @param {Request} req - Express request object.
+ * @param {Response} res - Express response object.
+ * @param {Function} next - Next middleware function.
+ */
+app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
@@ -68,7 +78,9 @@ if (!DB_URI) {
   process.exit(1); // Exit if DB URI is not set
 }
 
-// Connecting to DataBase
+/**
+ * Connect to MongoDB.
+ */
 mongoose
     .connect(DB_URI)
     .then(() => console.log("MongoDB connected successfully."))
@@ -80,8 +92,6 @@ mongoose
 /**
  * Listen on provided port, on all network interfaces.
  */
-
-// Create the HTTP server and listen on the provided port
 server.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });

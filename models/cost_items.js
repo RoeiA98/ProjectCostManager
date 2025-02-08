@@ -14,6 +14,11 @@ const categories = ['food', 'health', 'housing', 'sport', 'education'];
  * @property {number} [day] - Day of the cost item.
  * @property {string} [time] - Time of the cost item.
  */
+
+/**
+ * Cost schema for storing cost items.
+ * @type {mongoose.Schema}
+ */
 const costSchema = new mongoose.Schema({
     description: {
         type: String,
@@ -23,7 +28,7 @@ const costSchema = new mongoose.Schema({
             validator: function (value) {
                 return /^[a-zA-Z0-9]+(?:\s[a-zA-Z0-9]+)*$/.test(value);
             },
-            message: 'Description must contain ONLY letters in English, with spaces if needed.',
+            message: 'Description must contain ONLY letters in English, with spaces if needed.'
         }
     },
     category: {
@@ -33,33 +38,33 @@ const costSchema = new mongoose.Schema({
             validator: function (value) {
                 return categories.includes(value);
             },
-            message: 'Invalid category, must be one of: ' + categories.join(', '),
+            message: 'Invalid category, must be one of: ' + categories.join(', ')
         }
     },
     userid: {
         type: Number,
         required: [true, 'User ID is required.'],
-        validate: getIntegerValidator,
+        validate: getIntegerValidator
     },
     sum: {
         type: Number,
         required: true,
         min: 0,
-        validate: getIntegerValidator,
-        },
+        validate: getIntegerValidator
+    },
     year: {
         type: Number,
         required: false,
         min: [1900, 'Invalid year - must be between 1900 and the current year.'],
         max: [new Date().getFullYear(), 'Invalid year - must be between 1900 and the current year.'],
-        validate: getIntegerValidator,
+        validate: getIntegerValidator
     },
     month: {
         type: Number,
         required: false,
         min: [1, 'Invalid month - must be between 1 and 12.'],
         max: [12, 'Invalid month - must be between 1 and 12.'],
-        validate: getIntegerValidator,
+        validate: getIntegerValidator
     },
     day: {
         type: Number,
@@ -71,7 +76,7 @@ const costSchema = new mongoose.Schema({
                 const daysInMonth = new Date(year, month, 0).getDate();
                 return value >= 1 && value <= daysInMonth;
             },
-        message: 'Invalid day - Day must be between 1 and the number of days in the month.',
+            message: 'Invalid day - Day must be between 1 and the number of days in the month.'
         },
     },
     time: {
@@ -82,11 +87,15 @@ const costSchema = new mongoose.Schema({
                 const timeRegex = /^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/;
                 return timeRegex.test(value);
             },
-            message: 'Invalid time - Time must be in the format HH:MM:SS and represent a valid time.',
+            message: 'Invalid time - Time must be in the format HH:MM:SS and represent a valid time.'
         },
     },
 });
 
+/**
+ * CostItems model for interacting with the costs collection.
+ * @type {mongoose.Model}
+ */
 const CostItems = mongoose.model('Costs', costSchema);
 
 module.exports = CostItems;
