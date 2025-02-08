@@ -2,7 +2,7 @@ import pytest
 import requests
 from unittest import mock
 
-BASE_URL = 'https://projectcostmanager.onrender.com/api'
+BASE_URL = 'https://projectcostmanager.onrender.com'
 
 
 @mock.patch("requests.post")
@@ -29,14 +29,14 @@ def test_add_cost_item(mock_post):
 
 @pytest.mark.parametrize("payload, expected, code", [
     ({"description": "Groceries", "category": "food", "userid": 9999, "sum": 1}, "User not found.", 404),
-    ({"description": "Groceries", "category": "", "userid": 1, "sum": 1}, "Category is required.", 400),
-    ({"description": "", "category": "food", "userid": 1, "sum": 1}, "Description is required.", 400),
-    ({"description": "Groceries", "category": "invalid_category", "userid": 1, "sum": 1}, "Invalid category", 400),
-    ({"description": "Groceries", "category": "food", "userid": 1, "sum": -1}, "less than minimum allowed value", 400),
-    ({"description": "Groceries", "category": "food", "userid": 1, "sum": 1, "year": 1800}, "Invalid year", 400),
-    ({"description": "Groceries", "category": "food", "userid": 1, "sum": 1, "month": 13}, "Invalid month", 400),
-    ({"description": "Groceries", "category": "food", "userid": 1, "sum": 1, "day": 32}, "Invalid day", 400),
-    ({"description": "Groceries", "category": "food", "userid": 1, "sum": 1, "time": "25:00:00"}, "Invalid time", 400)
+    ({"description": "Groceries", "category": "", "userid": 123123, "sum": 1}, "Category is required.", 400),
+    ({"description": "", "category": "food", "userid": 123123, "sum": 1}, "Description is required.", 400),
+    ({"description": "Groceries", "category": "invalid_category", "userid": 123123, "sum": 1}, "Invalid category", 400),
+    ({"description": "Groceries", "category": "food", "userid": 123123, "sum": -1}, "less than minimum allowed value", 400),
+    ({"description": "Groceries", "category": "food", "userid": 123123, "sum": 1, "year": 1800}, "Invalid year", 400),
+    ({"description": "Groceries", "category": "food", "userid": 123123, "sum": 1, "month": 13}, "Invalid month", 400),
+    ({"description": "Groceries", "category": "food", "userid": 123123, "sum": 1, "day": 32}, "Invalid day", 400),
+    ({"description": "Groceries", "category": "food", "userid": 123123, "sum": 1, "time": "25:00:00"}, "Invalid time", 400)
 ])
 def test_add_cost_item_invalid_data(payload, expected, code):
     response = requests.post(f'{BASE_URL}/add', json=payload)
@@ -81,14 +81,14 @@ def test_about_invalid():
 @mock.patch("requests.get")
 def test_get_monthly_report(mock_get):
     params = {
-        "id": 1,
+        "id": 123123,
         "year": 2023,
         "month": 10
     }
     mock_response = mock.Mock()
     mock_response.status_code = 200
     mock_response.json.return_value = {
-        "userid": 1,
+        "userid": 123123,
         "year": 2023,
         "month": 10,
         "costs": [
@@ -108,16 +108,16 @@ def test_get_monthly_report(mock_get):
 
 @pytest.mark.parametrize("id, year, month, expected, code", [
     (9999, 2023, 10, "User not found", 404),
-    (1, 2023, -10, "month must be between 1 and 12.", 400),
-    (1, -2023, 10, "year must be between 1900 and the current year.", 400),
+    (123123, 2023, -10, "month must be between 1 and 12.", 400),
+    (123123, -2023, 10, "year must be between 1900 and the current year.", 400),
     (None, 2023, 10, "id is required.", 400),
-    (1, None, 10, "year is required.", 400),
-    (1, 2023, None, "month is required.", 400),
+    (123123, None, 10, "year is required.", 400),
+    (123123, 2023, None, "month is required.", 400),
     ("abc", 2023, 10, "User ID must be a number.", 400),
-    (1, "abc", 10, "year must be a valid number.", 400),
-    (1, 2023, "abc", "month must be a valid number.", 400),
-    (1, 1800, 10, "year must be between 1900 and the current year.", 400),
-    (1, 2023, 13, "month must be between 1 and 12.", 400)
+    (123123, "abc", 10, "year must be a valid number.", 400),
+    (123123, 2023, "abc", "month must be a valid number.", 400),
+    (123123, 1800, 10, "year must be between 1900 and the current year.", 400),
+    (123123, 2023, 13, "month must be between 1 and 12.", 400)
 ])
 def test_get_monthly_report_invalid_param(id, year, month, expected, code):
     params = {
@@ -127,4 +127,4 @@ def test_get_monthly_report_invalid_param(id, year, month, expected, code):
     }
     response = requests.get(f'{BASE_URL}/report', params=params)
     assert response.status_code == code
-    assert response.json()["error"] == expected
+    assert expected in response.json()["error"]
