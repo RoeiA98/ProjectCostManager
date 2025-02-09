@@ -81,15 +81,7 @@ const costSchema = new mongoose.Schema({
     },
     time: {
         type: String,
-        required: false,
-        validate: {
-            validator: function (value) {
-                if (!value) return true; // Allow empty values
-                const timeRegex = /^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/;
-                return timeRegex.test(value);
-            },
-            message: 'Invalid time - Time must be in the format HH:MM:SS and represent a valid time.'
-        },
+        required: false
     },
 });
 
