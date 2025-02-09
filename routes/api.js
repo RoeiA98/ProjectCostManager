@@ -34,7 +34,7 @@ router.post('/add', async (req, res) => {
             sum,
             year: year || new Date().getFullYear(),
             month: month || new Date().getMonth() + 1,
-            day: day || new Date().getDay(),
+            day: day || new Date().getDate(),
             time: time || `${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`
         });
 
