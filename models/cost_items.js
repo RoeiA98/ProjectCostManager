@@ -85,7 +85,7 @@ const costSchema = new mongoose.Schema({
         validate: {
             validator: function (value) {
                 if (!value) return true; // Allow empty values
-                const timeRegex = /^([01]\d|2[0-3]):([0-5]\d):([0-5]?\d)$/; // HH:MM:SS
+                const timeRegex = /^([01]?\d|2[0-3]):([0-5]?\d):([0-5]?\d)$/; // HH:MM:SS
                 if (!timeRegex.test(value)) return false; // Check if time is in the correct format
                 const [hours, minutes, seconds] = value.split(':'); // Split time into components
                 this.time = `${hours}:${minutes}:${seconds.padStart(2, '0')}`; // Normalize time
