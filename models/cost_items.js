@@ -72,7 +72,7 @@ const costSchema = new mongoose.Schema({
         validate: {
             validator: function (value) {
                 const year = this.year || new Date().getFullYear(); // Use current year if year is not provided
-                const month = (this.month || new Date().getMonth() + 1) - 1; // Adjust month to be zero-based
+                const month = (this.month || new Date().getMonth()); // Adjust month to be zero-based
                 const daysInMonth = new Date(year, month + 1, 0).getDate(); // Correctly calculate days in the month
                 return value >= 1 && value <= daysInMonth; // Check if day is within the month
             },
