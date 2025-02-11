@@ -185,9 +185,16 @@ router.get('/report', async (req, res) => {
             month: parseInt(month)
         }).select("-_id");
 
+        // Categories to include in the response
+        const categories = ['food', 'health', 'housing', 'sport', 'education'];
+
         if (!costs.length) {
-            return res.status(404).json({
-                error: `No cost items found for user ${id} for month: ${month}, year: ${year}.`
+            categories.forEach(category => {
+                costs.push({
+                    category: category,
+                    sum: 0,
+                    description: "No cost items found for this category."
+                });
             });
         }
 
@@ -198,9 +205,6 @@ router.get('/report', async (req, res) => {
             month: parseInt(month),
             costs: []
         };
-
-        // Categories to include in the response
-        const categories = ['food', 'health', 'housing', 'sport', 'education'];
 
         // Initialize each category as an empty array
         categories.forEach(category => {
