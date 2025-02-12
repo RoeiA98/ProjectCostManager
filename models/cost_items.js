@@ -71,10 +71,10 @@ const costSchema = new mongoose.Schema({
         required: false,
         validate: {
             validator: function (value) {
-                const year = this.year || new Date().getFullYear(); // Use current year if year is not provided
-                const month = (this.month || new Date().getMonth()); // Adjust month to be zero-based
-                const daysInMonth = new Date(year, month + 1, 0).getDate(); // Correctly calculate days in the month
-                return value >= 1 && value <= daysInMonth; // Check if day is within the month
+                const year = this.year || new Date().getFullYear();
+                const month = (this.month || (new Date().getMonth() + 1));
+                const daysInMonth = new Date(year, month, 0).getDate();
+                return value >= 1 && value <= daysInMonth;
             },
             message: 'Invalid day - Day must be between 1 and the number of days in the month.'
         },
@@ -86,8 +86,8 @@ const costSchema = new mongoose.Schema({
             validator: function (value) {
                 if (!value) return true; // Allow empty values
                 const timeRegex = /^([01]?\d|2[0-3]):([0-5]?\d):([0-5]?\d)$/; // HH:MM:SS
-                if (!timeRegex.test(value)) return false; // Check if time is in the correct format
-                const [hours, minutes, seconds] = value.split(':'); // Split time into components
+                if (!timeRegex.test(value)) return false;
+                const [hours, minutes, seconds] = value.split(':');
                 this.time = `${hours}:${minutes}:${seconds.padStart(2, '0')}`; // Normalize time
                 return true;
             },

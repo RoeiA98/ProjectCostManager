@@ -188,16 +188,6 @@ router.get('/report', async (req, res) => {
         // Categories to include in the response
         const categories = ['food', 'health', 'housing', 'sport', 'education'];
 
-        if (!costs.length) {
-            categories.forEach(category => {
-                costs.push({
-                    category: category,
-                    sum: 0,
-                    description: "No cost items found for this category."
-                });
-            });
-        }
-
         // Initialize the result structure
         const result = {
             userid: parseInt(id),
@@ -206,23 +196,18 @@ router.get('/report', async (req, res) => {
             costs: []
         };
 
-        // Initialize each category as an empty array
         categories.forEach(category => {
-            result.costs.push({
-                [category]: []
-            });
-        });
-
-        // Group costs by category
-        costs.forEach(cost => {
-            const categoryIndex = categories.indexOf(cost.category);
-            if (categoryIndex !== -1) {
-                result.costs[categoryIndex][cost.category].push({
-                    sum: cost.sum,
-                    description: cost.description,
-                    day: cost.day
-                });
-            }
+            const categoryCosts = costs.filter(cost => cost.category === category);
+            const categoryObject = {};
+            categoryObject[category] = categoryCosts.length === 0 ? [{
+                sum: 0,
+                description: "No cost items found for this category."
+            }] : categoryCosts.map(cost => ({
+                sum: cost.sum,
+                description: cost.sum === 0 ? "No cost items found for this category." : cost.description,
+                day: cost.day
+            }));
+            result.costs.push(categoryObject);
         });
 
         res.status(200).json(result);
