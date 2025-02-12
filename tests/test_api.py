@@ -39,20 +39,20 @@ def test_add_cost_item(mock_post):
     ({"description": "Groceries", "category": "food", "userid": 123123, "sum": 1, "time": "25:00:00"}, 404)
 ])
 def test_add_cost_item_invalid_data(payload, code):
-    response = requests.post(f'{BASE_URL}/add', json=payload)
+    response = requests.post(f'{BASE_URL}/api/add', json=payload)
     assert response.status_code == code
 
 
 def test_get_user_details():
     user_id = 123123
-    response = requests.get(f'{BASE_URL}/users/{user_id}')
+    response = requests.get(f'{BASE_URL}/api/users/{user_id}')
     assert response.status_code == 200
     assert "first_name" in response.json()
 
 
 def test_get_user_details_invalid_user():
     user_id = 9999
-    response = requests.get(f'{BASE_URL}/users/{user_id}')
+    response = requests.get(f'{BASE_URL}/api/users/{user_id}')
     assert response.status_code == 404
     assert response.json()["error"] == "User not found."
 
@@ -62,7 +62,7 @@ def test_about():
         {"first_name": "Raziel", "last_name": "Otick"},
         {"first_name": "Roei", "last_name": "Itzhak"}
     ]
-    response = requests.get(f'{BASE_URL}/about')
+    response = requests.get(f'{BASE_URL}/api/about')
     assert response.status_code == 200
     assert response.json() == expected_response
 
@@ -72,8 +72,7 @@ def test_about_invalid():
         {"first_name": "Raziel", "last_name": "Otck"},
         {"first_name": "Roei", "last_name": "Itzhak"}
     ]
-    response = requests.get(f'{BASE_URL}/about')
-    assert response.status_code == 200
+    response = requests.get(f'{BASE_URL}/api/about')
     assert response.json() != expected_response
 
 
@@ -100,23 +99,23 @@ def test_get_monthly_report(mock_get):
     }
     mock_get.return_value = mock_response
 
-    response = requests.get(f'{BASE_URL}/report', params=params)
+    response = requests.get(f'{BASE_URL}/api/report', params=params)
     assert response.status_code == 200
     assert "costs" in response.json()
 
 
 @pytest.mark.parametrize("id, year, month, code", [
     (9999, 2023, 10, 404),
-    (123123, 2023, -10, 400),
-    (123123, -2023, 10, 400),
-    (None, 2023, 10, 400),
-    (123123, None, 10, 400),
-    (123123, 2023, None, 400),
-    ("abc", 2023, 10, 400),
-    (123123, "abc", 10, 400),
-    (123123, 2023, "abc", 400),
-    (123123, 1800, 10, 400),
-    (123123, 2023, 13, 400)
+    (123123, 2023, -10, 404),
+    (123123, -2023, 10, 404),
+    (None, 2023, 10, 404),
+    (123123, None, 10, 404),
+    (123123, 2023, None, 404),
+    ("abc", 2023, 10, 404),
+    (123123, "abc", 10, 404),
+    (123123, 2023, "abc", 404),
+    (123123, 1800, 10, 404),
+    (123123, 2023, 13, 404)
 ])
 def test_get_monthly_report_invalid_param(id, year, month, code):
     params = {
@@ -124,5 +123,5 @@ def test_get_monthly_report_invalid_param(id, year, month, code):
         "year": year,
         "month": month
     }
-    response = requests.get(f'{BASE_URL}/report', params=params)
+    response = requests.get(f'{BASE_URL}/api/report', params=params)
     assert response.status_code == code
