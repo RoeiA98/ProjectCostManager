@@ -3,7 +3,6 @@ import requests
 from unittest import mock
 
 BASE_URL = 'https://projectcostmanager.onrender.com/api'
-# BASE_URL = 'https://awful-micaela-roei922-d3395819.koyeb.app'
 
 
 @mock.patch("requests.post")
