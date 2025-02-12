@@ -97,9 +97,9 @@ const costSchema = new mongoose.Schema({
 });
 
 /**
- * CostItems model for interacting with the costs collection.
+ * costItems model for interacting with the costs collection.
  * @type {mongoose.Model}
  */
-const CostItems = mongoose.model('Costs', costSchema);
+const costItems = mongoose.model('Costs', costSchema);
 
-module.exports = CostItems;
+module.exports = costItems;

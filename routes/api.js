@@ -71,13 +71,13 @@ router.get('/users/:id', async (req, res) => {
         }
 
         const user = await users.findOne({id: userid}).select('-_id');
-        const user_costs = await cost.find({userid: userid}).select('-_id');
+        const userCosts = await cost.find({userid: userid}).select('-_id');
 
-        if (!user || !user_costs) {
+        if (!user || !userCosts) {
             return res.status(404).json({error: 'User not found.'});
         }
 
-        const total = user_costs.reduce((acc, cost) => acc + cost.sum, 0);
+        const total = userCosts.reduce((acc, cost) => acc + cost.sum, 0);
 
         res.status(200).json({
             first_name: user.first_name,
